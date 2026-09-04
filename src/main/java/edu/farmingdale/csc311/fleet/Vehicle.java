@@ -4,9 +4,19 @@ package edu.farmingdale.csc311.fleet;
  * Base class for everything the motor pool owns. Abstract on purpose:
  * the fleet holds cars and trucks, never a plain "vehicle".
  *
- * @author YOUR NAME HERE
+ * @author Rochelle Elliott
  */
 public abstract class Vehicle implements Honkable {
+
+    private final String vin;
+    private final String make;
+    private final String model;
+    private int year;
+    private String color;
+    private int wheels;
+    private final double engineSize;
+    private final FuelType fuelType;
+    private double fuelCapacity;
 
     /* ------------------------------------------------------------------
      * TODO-02     commit: TODO-02: add Vehicle fields and constructor
@@ -44,10 +54,65 @@ public abstract class Vehicle implements Honkable {
      * a private static helper and call it three times.
      * ------------------------------------------------------------------ */
 
+    private static String validateText(String value, String fieldName) {
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException("Invalid " + fieldName + ": " + value);
+        }
+
+        return value.trim();
+    }
+
     protected Vehicle(String vin, String make, String model, int year, String color,
                       int wheels, double engineSize, FuelType fuelType, double fuelCapacity) {
-        throw new UnsupportedOperationException("TODO-02");
+
+        if (vin == null) {
+            throw new IllegalArgumentException("Invalid vin: " + vin);
+        }
+
+        vin = vin.trim();
+
+        if (vin.length() != 17) {
+            throw new IllegalArgumentException("Invalid vin: " + vin);
+        }
+
+        this.vin = vin.toUpperCase();
+
+        this.make = validateText(make, "make");
+        this.model = validateText(model, "model");
+        this.color = validateText(color, "color");
+
+        if (year < 1900 || year > 2100) {
+            throw new IllegalArgumentException("Invalid year: " + year);
+        }
+        this.year = year;
+
+        if (wheels < 2 || wheels > 18) {
+            throw new IllegalArgumentException("Invalid wheels: " + wheels);
+        }
+        this.wheels = wheels;
+
+        if (fuelType == null) {
+            throw new IllegalArgumentException("Invalid fuelType: null");
+        }
+        this.fuelType = fuelType;
+
+        if (fuelType.hasEngine()) {
+            if (engineSize <= 0.0 || engineSize > 8.5) {
+                throw new IllegalArgumentException("Invalid engineSize: " + engineSize);
+            }
+        } else {
+            if (engineSize != 0.0) {
+                throw new IllegalArgumentException("Invalid engineSize: " + engineSize);
+            }
+        }
+        this.engineSize = engineSize;
+
+        if (fuelCapacity <= 0.0) {
+            throw new IllegalArgumentException("Invalid fuelCapacity: " + fuelCapacity);
+        }
+        this.fuelCapacity = fuelCapacity;
     }
+
 
     /* ------------------------------------------------------------------
      * TODO-03     commit: TODO-03: add Vehicle getters and setters

@@ -168,18 +168,67 @@ public class Fleet {
      * ------------------------------------------------------------------ */
 
     public Vehicle[] sortedByYear() {
-        throw new UnsupportedOperationException("TODO-09");
+        Vehicle[] yearSort = toArray();
+
+        for (int i = 0; i < yearSort.length; i++) {
+            int minIndex = i;
+            for (int j = i; j < count; j++) {
+                if (yearSort[j].getYear() < yearSort[minIndex].getYear()
+                || yearSort[j].getYear() == yearSort[minIndex].getYear()
+                && yearSort[j].getMake().compareToIgnoreCase(yearSort[minIndex].getMake()) < 0) {
+                    minIndex = j;
+                }
+            }
+
+            Vehicle temp = yearSort[i];
+            yearSort[i] = yearSort[minIndex];
+            yearSort[minIndex] = temp;
+        }
+
+        return yearSort;
     }
 
     public int countWithFuelType(FuelType fuel) {
-        throw new UnsupportedOperationException("TODO-09");
+        int total = 0;
+        for (int i = 0; i < count; i++) {
+            if (vehicles[i].getFuelType().equals(fuel)) {
+                total++;
+            }
+        }
+
+        return total;
     }
 
     public double averageEngineSize() {
-        throw new UnsupportedOperationException("TODO-09");
+        double total = 0.0;
+        int engineCount = 0;
+        for (int i = 0; i < count; i++) {
+            if (vehicles[i].getFuelType().hasEngine()) {
+                total+= vehicles[i].getEngineSize();
+                engineCount++;
+            }
+        }
+
+        if (engineCount == 0) {
+            return 0.0;
+        }
+
+        return total/engineCount;
     }
 
     public Vehicle longestRange() {
-        throw new UnsupportedOperationException("TODO-09");
+        if (count==0) {
+            return null;
+        }
+
+        Vehicle longest = vehicles[0];
+
+        for (int i = 1; i < count; i++) {
+            if (vehicles[i].rangeInMiles() > longest.rangeInMiles()) {
+                longest = vehicles[i];
+            }
+        }
+
+        return longest;
     }
 }

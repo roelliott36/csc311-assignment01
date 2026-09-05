@@ -23,7 +23,7 @@ public enum FuelType {
      * ------------------------------------------------------------------ */
 
     GASOLINE("Gasoline", "gallons", 28.0),
-    DIESEL("Disel", "gallons", 34.0),
+    DIESEL("Diesel", "gallons", 34.0),
     ELECTRIC("Electric", "kWh", 3.2),
     HYBRID("Hybrid", "gallons", 48.0);
 

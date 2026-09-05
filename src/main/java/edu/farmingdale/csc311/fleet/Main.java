@@ -3,7 +3,7 @@ package edu.farmingdale.csc311.fleet;
 /**
  * Driver. This is the only class that prints a report.
  *
- * @author YOUR NAME HERE
+ * @author Rochelle Elliott
  */
 public class Main {
 
@@ -52,6 +52,191 @@ public class Main {
      * ------------------------------------------------------------------ */
 
     public static void main(String[] args) {
-        System.out.println("TODO-10: build the fleet demo. See the handout for the expected output.");
+
+        Fleet fleet = buildFleet();
+
+        System.out.println("=== Farmingdale Motor Pool ===\n");
+        printInventroy(fleet);
+        soundCheck(fleet);
+        printReport(fleet);
+        printGuardRails(fleet);
+
     }
+
+    private static Fleet buildFleet() {
+        Fleet fleet = new Fleet("Farmingdale Motor Pool");
+
+        Car accord = new Car(
+                "1HGCM82633A004352",
+                "Honda",
+                "Accord",
+                2023,
+                "Blue",
+                4,
+                2.0,
+                FuelType.GASOLINE,
+                15.8,
+                4
+        );
+
+        Car tesla = new Car(
+                "5YJ3E1EA7PF123456",
+                "Tesla",
+                "Model 3",
+                2024,
+                "Red",
+                4,
+                0.0,
+                FuelType.ELECTRIC,
+                75.0,
+                4
+        );
+
+        Car prius = new Car(
+                "JTDKARFU2J3061234",
+                "Toyota",
+                "Prius",
+                2020,
+                "Silver",
+                4,
+                1.8,
+                FuelType.HYBRID,
+                11.3,
+                5
+        );
+
+        Truck f350 = new Truck(
+                "1FT8W3BT5MEC12345",
+                "Ford",
+                "F-350",
+                2021,
+                "White",
+                6,
+                6.7,
+                FuelType.DIESEL,
+                40.0,
+                3500.0
+        );
+
+        Truck ram2500 = new Truck(
+                "3C6UR5DL9JG123456",
+                "Ram",
+                "2500",
+                2019,
+                "Black",
+                4,
+                6.4,
+                FuelType.GASOLINE,
+                31.0,
+                1800.0
+        );
+
+        fleet.add(accord);
+        fleet.add(tesla);
+        fleet.add(prius);
+        fleet.add(f350);
+        fleet.add(ram2500);
+
+        return fleet;
+    }
+
+    private static void printInventroy(Fleet fleet) {
+
+        System.out.println("-- Inventory (5 vehicles, sorted by year then make) --");
+        for (Vehicle vehicle : fleet.sortedByYear()) {
+            System.out.println(vehicle);
+        }
+    }
+
+    private static void soundCheck(Fleet fleet) {
+
+        System.out.println("\n-- Sound check --");
+        for (Honkable vehicle : fleet.sortedByYear()) {
+            vehicle.honk();
+        }
+
+        Honkable accord = fleet.findByVin("1HGCM82633A004352");
+
+        System.out.println("\n-- Impatient Accord --");
+
+        accord.honk();
+        accord.honk();
+        accord.honk();
+    }
+
+    private static void printReport(Fleet fleet) {
+
+        System.out.println("\n-- Fleet report --");
+        System.out.printf("%-20s: %d%n",
+                "Vehicle Count",
+                fleet.size());
+
+        System.out.printf("%-20s: %.1f L%n",
+                "Average engine size",
+                fleet.averageEngineSize());
+
+        Vehicle longest = fleet.longestRange();
+
+        System.out.printf("%-20s: %d %s %s (%.1f mi)%n",
+                "Longest range",
+                longest.getYear(),
+                longest.getMake(),
+                longest.getModel(),
+                longest.rangeInMiles());
+
+        for (FuelType fuel : FuelType.values()) {
+            System.out.printf("  %-9s: %d%n",
+                    fuel.getLabel(),
+                    fleet.countWithFuelType(fuel));
+        }
+    }
+
+    private static void printGuardRails(Fleet fleet) {
+
+        System.out.println("\n-- Guard rails --");
+        Vehicle accord = fleet.findByVin("1HGCM82633A004352");
+
+        System.out.printf("%-23s: %s%n",
+                "Duplicate VIN rejected",
+                !fleet.add(accord));
+
+        System.out.printf("%-23s: %s%n",
+                "Removed the Prius",
+                fleet.removeByVin("JTDKARFU2J3061234"));
+
+        System.out.printf("%-23s: %d%n",
+                "Fleet size now",
+                fleet.size());
+
+        try {
+            new Car(
+                    "TEST1234567890123",
+                    "Test",
+                    "Electric",
+                    2024,
+                    "Red",
+                    4,
+                    2.0,
+                    FuelType.ELECTRIC,
+                    10.0,
+                    4
+            );
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+
+        try {
+            FuelType.fromLabel("Steam");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+
+        try {
+            accord.honk(0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+    }
+
 }
+

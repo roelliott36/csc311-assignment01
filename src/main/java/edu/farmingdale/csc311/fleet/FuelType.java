@@ -65,7 +65,7 @@ public enum FuelType {
      */
     public static FuelType fromLabel(String text) {
         for (FuelType fuelType : FuelType.values()) {
-            if (fuelType.label.equalsIgnoreCase(text)) {
+            if (fuelType.label.equalsIgnoreCase(text.trim())) {
                 return fuelType;
             }
         }
